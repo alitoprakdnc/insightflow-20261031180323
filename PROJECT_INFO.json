@@ -1,0 +1,78 @@
+{
+  "name": "InsightFlow",
+  "description": "InsightFlow is a SaaS platform that ingests real‑time business data, stores it in PostgreSQL, runs AI‑powered anomaly detection on key performance indicators, and presents interactive dashboards with automatic alerting. It combines a Go‑based backend API, a Python microservice for machine‑learning inference, and a TypeScript/React frontend, all orchestrated with Docker and provisioned via Terraform.",
+  "category": "SaaS Business Intelligence & AI Automation",
+  "technologies": [
+    "Go",
+    "TypeScript",
+    "React",
+    "Python",
+    "PostgreSQL",
+    "Docker",
+    "Docker Compose",
+    "Terraform",
+    "GitHub Actions"
+  ],
+  "files": [
+    {
+      "path": "src/backend/main.go",
+      "purpose": "Bootstraps the Go API server, loads configuration, and starts the HTTP listener."
+    },
+    {
+      "path": "src/backend/router.go",
+      "purpose": "Defines all HTTP routes, middleware, and connects handlers to endpoints."
+    },
+    {
+      "path": "src/backend/handlers/kpi_handler.go",
+      "purpose": "Implements request handlers for creating, retrieving, and aggregating KPI data."
+    },
+    {
+      "path": "src/backend/models/kpi.go",
+      "purpose": "Declares Go structs representing KPI entities and JSON serialization rules."
+    },
+    {
+      "path": "src/backend/db/postgres.go",
+      "purpose": "Manages PostgreSQL connection pooling, migrations, and provides helper query functions."
+    },
+    {
+      "path": "src/backend/config/config.go",
+      "purpose": "Loads environment variables into a typed configuration struct with defaults and validation."
+    },
+    {
+      "path": "src/ai/anomaly_detector.py",
+      "purpose": "Exposes a FastAPI endpoint that receives KPI batches, calls the model, and returns anomaly scores."
+    },
+    {
+      "path": "src/ai/model_loader.py",
+      "purpose": "Loads a pre‑trained scikit‑learn model from disk and provides a thread‑safe predict function."
+    },
+    {
+      "path": "src/frontend/src/index.tsx",
+      "purpose": "Initializes the React application, sets up routing, and renders the root Dashboard component."
+    },
+    {
+      "path": "src/frontend/src/components/Dashboard.tsx",
+      "purpose": "Fetches KPI data via the Go API, displays charts with Recharts, and highlights anomalies."
+    },
+    {
+      "path": "Dockerfile",
+      "purpose": "Multi‑stage build: compiles Go backend, builds React assets, and assembles a minimal runtime image."
+    },
+    {
+      "path": "docker-compose.yml",
+      "purpose": "Orchestrates containers for the Go API, Python AI service, PostgreSQL, and a reverse‑proxy Nginx."
+    }
+  ],
+  "features": [
+    "Real‑time KPI ingestion via REST API",
+    "Automated anomaly detection using a trained ML model",
+    "Interactive dashboards with drill‑down charts",
+    "Configurable alerting via email and Slack webhook",
+    "Role‑based access control for multiple tenant organizations",
+    "Export of reports in CSV and PDF",
+    "Docker‑based deployment for on‑prem or cloud environments",
+    "Infrastructure as code with Terraform for AWS RDS and ECS"
+  ],
+  "architecture": "InsightFlow follows a micro‑service architecture. The Go backend provides a clean, type‑safe API for CRUD operations on KPI data and aggregates queries. Data is persisted in PostgreSQL with proper indexing for time‑series queries. A separate Python FastAPI service hosts the anomaly‑detection model, allowing independent scaling and GPU usage if needed. The React/TypeScript frontend consumes the API, renders charts with Recharts, and polls the AI service for anomaly flags. All services run in Docker containers orchestrated by Docker Compose in development and can be deployed to AWS ECS/Fargate via Terraform. Configuration is externalized via environment variables, and CI/CD pipelines in GitHub Actions run unit, integration, and end‑to‑end tests before publishing images to a container registry.",
+  "testing": "The testing strategy includes:\n- **Unit tests** for Go packages using `go test` with table‑driven cases, and for Python modules using `pytest`.\n- **Integration tests** that spin up a Docker Compose stack (PostgreSQL, API, AI service) and run API contract tests with `Postman/Newman`.\n- **Frontend tests** using Jest and React Testing Library for component rendering and state logic.\n- **End‑to‑end tests** with Cypress that simulate user flows across the dashboard, including anomaly highlighting.\n- **CI pipeline** in GitHub Actions runs linting, all test suites, builds Docker images, and pushes them only on successful test runs. Code coverage thresholds are enforced (80% for backend, 85% for AI service, 90% for frontend)."
+}
